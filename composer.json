@@ -59,7 +59,6 @@
         "sonata-project/core-bundle": ">=3.12 <3.13.4"
     },
     "prefer-stable": true,
-    "minimum-stability": "alpha",
     "autoload": {
         "psr-4": {
             "LWC\\ImportExportBundle\\": "src/",
