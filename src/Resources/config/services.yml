@@ -1,0 +1,194 @@
+services:
+    # Parameter Bag
+    sylius.parameter_bag:
+        class: LWC\ImportExportBundle\DependencyInjection\ParameterBag\ParameterBag
+        arguments:
+            - "@service_container"
+
+    # Controllers for Admin-Integration
+    sylius.controller.import_data:
+        public: true
+        class: LWC\ImportExportBundle\Controller\ImportDataController
+        arguments:
+            - "@sylius.importers_registry"
+            - "@session.flash_bag"
+            - "@form.factory"
+            - "@twig"
+        tags: ['controller.service_arguments']
+
+#    sylius.controller.export_data_customer:
+#        public: true
+#        class: LWC\ImportExportBundle\Controller\ExportDataController
+#        arguments:
+#            - "@sylius.exporters_registry"
+#            - "@sylius.resource_controller.request_configuration_factory"
+#            - "@sylius.resource_controller.resources_collection_provider"
+#            - "@sylius.repository.customer"
+#            - "%sylius.resources%"
+#        tags: ['controller.service_arguments']
+
+    # Form Type
+    sylius.form.type.import:
+        public: true
+        class: LWC\ImportExportBundle\Form\ImportType
+        arguments: ["@sylius.importers_registry"]
+        tags: [form.type]
+
+    # Registries for Importers / Exporters
+    sylius.exporters_registry:
+        public: true
+        class: LWC\ImportExportBundle\Exporter\ExporterRegistry
+        arguments:
+            - LWC\ImportExportBundle\Exporter\ResourceExporterInterface
+            - exporter
+
+    sylius.importers_registry:
+        public: true
+        class: LWC\ImportExportBundle\Importer\ImporterRegistry
+        arguments:
+            - LWC\ImportExportBundle\Importer\ImporterInterface
+            - importer
+
+    # Default export transformers and a default transformers pool
+    sylius.exporters_transformer_pool:
+        class: LWC\ImportExportBundle\Exporter\Transformer\Pool
+        arguments: [!tagged sylius.exporter_transformer]
+
+    sylius.exporters_transformer_datetime:
+        class: LWC\ImportExportBundle\Exporter\Transformer\Handler\DateTimeToStringHandler
+        tags:
+            - { name: sylius.exporter_transformer }
+
+    sylius.exporters_transformer_integer_money_format:
+        class: LWC\ImportExportBundle\Exporter\Transformer\Handler\IntegerToMoneyFormatHandler
+        arguments:
+            - ['Total']
+        tags:
+            - { name: sylius.exporter_transformer }
+
+    sylius.exporters_transformer_array:
+        class: LWC\ImportExportBundle\Exporter\Transformer\Handler\ArrayToStringHandler
+        tags:
+            - { name: sylius.exporter_transformer }
+
+    # Default import transformers and a default transformers pool
+    sylius.importers_transformer_pool:
+        class: LWC\ImportExportBundle\Importer\Transformer\Pool
+        arguments: [!tagged sylius.importer_transformer]
+
+    sylius.importers_transformer_datetime:
+        class: LWC\ImportExportBundle\Importer\Transformer\Handler\StringToDateTimeHandler
+        tags:
+            - { name: sylius.importer_transformer }
+
+    sylius.importers_transformer_array:
+        class: LWC\ImportExportBundle\Importer\Transformer\Handler\StringToArrayHandler
+        tags:
+            - { name: sylius.importer_transformer }
+
+    sylius.importers_transformer_boolean:
+        class: LWC\ImportExportBundle\Importer\Transformer\Handler\StringToBooleanHandler
+        tags:
+            - { name: sylius.importer_transformer }
+
+    sylius.importers_transformer_integer:
+        class: LWC\ImportExportBundle\Importer\Transformer\Handler\StringToIntegerHandler
+        tags:
+            - { name: sylius.importer_transformer }
+
+    sylius.importers_transformer_float:
+        class: LWC\ImportExportBundle\Importer\Transformer\Handler\StringToFloatHandler
+        tags:
+            - { name: sylius.importer_transformer }
+
+    # Commands
+    sylius.command.import_data:
+        class: LWC\ImportExportBundle\Command\ImportDataCommand
+        arguments:
+            - "@sylius.importers_registry"
+        tags:
+            - { name: 'console.command' }
+
+    sylius.command.import_data_from_message_queue:
+        class: LWC\ImportExportBundle\Command\ImportDataFromMessageQueueCommand
+        arguments:
+            - "@sylius.importers_registry"
+        calls:
+            - [ setContainer, ["@service_container"]]
+        tags:
+            - { name: 'console.command' }
+
+    sylius.command.export_data:
+        class: LWC\ImportExportBundle\Command\ExportDataCommand
+        arguments:
+            - "@sylius.exporters_registry"
+        calls:
+            - [ setContainer, ["@service_container"]]
+        tags:
+            - { name: 'console.command' }
+
+    sylius.command.export_data_to_message_queue:
+        class: LWC\ImportExportBundle\Command\ExportDataToMessageQueueCommand
+        arguments:
+            - "@sylius.exporters_registry"
+        calls:
+            - [ setContainer, ["@service_container"]]
+        tags:
+            - { name: 'console.command' }
+
+    # Plugins for Exporters
+
+#    sylius.exporter.plugin.resource.customers:
+#        class: LWC\ImportExportBundle\Exporter\Plugin\ResourcePlugin
+#        arguments:
+#            - "@sylius.repository.customer"
+#            - "@property_accessor"
+#            - "@doctrine.orm.entity_manager"
+
+    # ORM hydrators to improve performance
+#    sylius.exporter.orm.hydrator.orders:
+#        class: LWC\ImportExportBundle\Exporter\ORM\Hydrator\OrderHydrator
+#        arguments:
+#            - "@sylius.repository.order"
+
+    # PluginPools for Exporters. Can contain multiple Plugins
+#    sylius.exporter.pluginpool.customers:
+#        class: LWC\ImportExportBundle\Exporter\Plugin\PluginPool
+#        arguments:
+#            - ["@sylius.exporter.plugin.resource.customers"]
+#            - ["Email", "Email_canonical", "First_name" , "Last_name" ,  "Birthday", "Gender", "Phone_number", "Subscribed_to_newsletter"]
+
+    # Service for gathering Information about Import
+    sylius.importer.result:
+        class: LWC\ImportExportBundle\Importer\ImporterResult
+        arguments:
+            - "@debug.stopwatch"
+            - "@monolog.logger"
+
+    # Service for validating the header-information of input-files.
+    sylius.importer.metadata_validator:
+        class: LWC\ImportExportBundle\Processor\MetadataValidator
+
+    # generic ResourceProcessors, which can work with just Property-Accessors
+
+#    sylius.processor.customer_groups:
+#        class: LWC\ImportExportBundle\Processor\ResourceProcessor
+#        arguments:
+#            - "@sylius.factory.customer_group"
+#            - "@sylius.repository.customer_group"
+#            - "@property_accessor"
+#            - "@sylius.importer.metadata_validator"
+#            - "@doctrine.orm.entity_manager"
+#            - ["Code", "Name"]
+#
+#    sylius.processor.customers:
+#        class: LWC\ImportExportBundle\Processor\ResourceProcessor
+#        arguments:
+#            - "@sylius.factory.customer"
+#            - "@sylius.repository.customer"
+#            - "@property_accessor"
+#            - "@sylius.importer.metadata_validator"
+#            - "@doctrine.orm.entity_manager"
+#            - ["Email", "Email_canonical", "First_name" , "Last_name" ,  "Birthday", "Gender", "Phone_number", "Subscribed_to_newsletter"]
+
+

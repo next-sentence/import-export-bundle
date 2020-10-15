@@ -1,0 +1,20 @@
+services:
+    sylius.factory.csv_reader:
+        class: Port\Csv\CsvReaderFactory
+        arguments:
+            - 0
+
+    # CSV-Importers
+
+#    sylius.importer.customer_group.csv:
+#        class: LWC\ImportExportBundle\Importer\ResourceImporter
+#        arguments:
+#            - "@sylius.factory.csv_reader"
+#            - "@sylius.manager.customer_group"
+#            - "@sylius.processor.customer_groups"
+#            - "@sylius.importer.result"
+#            - "%sylius.importer.batch_size%"
+#            - "%sylius.importer.fail_on_incomplete%"
+#            - "%sylius.importer.stop_on_failure%"
+#        tags:
+#            - { name: sylius.importer, type: customer_group, format: csv }

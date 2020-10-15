@@ -1,0 +1,14 @@
+services:
+    # JSON-Importers
+
+#    sylius.importer.customers.json:
+#        class: LWC\ImportExportBundle\Importer\JsonResourceImporter
+#        arguments:
+#            - "@sylius.manager.customer"
+#            - "@sylius.processor.customers"
+#            - "@sylius.importer.result"
+#            - "%sylius.importer.batch_size%"
+#            - "%sylius.importer.fail_on_incomplete%"
+#            - "%sylius.importer.stop_on_failure%"
+#        tags:
+#            - { name: sylius.importer, type: customer, format: json }
