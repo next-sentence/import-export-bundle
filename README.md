@@ -1,24 +1,5 @@
-<p align="center">
-    <a href="http://sylius.org" target="_blank">
-        <img src="https://demo.sylius.com/assets/shop/img/logo.png" />
-    </a>
-</p>
-<h1 align="center">FOSSyliusImportExportPlugin</h1>
-<p align="center">
-    <a href="https://packagist.org/packages/friendsofsylius/sylius-import-export-plugin" title="License">
-        <img src="https://img.shields.io/packagist/l/friendsofsylius/sylius-import-export-plugin.svg" />
-    </a>
-    <a href="https://packagist.org/packages/friendsofsylius/sylius-import-export-plugin" title="Version">
-        <img src="https://img.shields.io/packagist/v/friendsofsylius/sylius-import-export-plugin.svg" />
-    </a>
-    <a href="http://travis-ci.org/FriendsOfSylius/SyliusImportExportPlugin" title="Build status">
-        <img src="https://img.shields.io/travis/FriendsOfSylius/SyliusImportExportPlugin/master.svg" />
-    </a>
-</p>
 
-<p align="center">
-    <a href="https://sylius.com/plugins/" target="_blank"><img src="https://sylius.com/assets/badge-approved-by-sylius.png" width="200"></a>
-</p>
+<h1 align="center">LWCImportExportBundle</h1>
 
 ## Installation
 
@@ -29,7 +10,7 @@
 
 2. Require and install the plugin
 
-  - Run `composer require friendsofsylius/sylius-import-export-plugin`
+  - Run `composer require next-sentence/import-export-bundle`
 
 3. Register the bundle:
 
@@ -40,7 +21,7 @@
 
 return [
     // ...
-    FriendsOfSylius\SyliusImportExportPlugin\LWCImportExportBundle::class => ['all' => true],
+    LWC\ImportExportBundle\LWCImportExportBundle::class => ['all' => true],
 ];
 ```
 
