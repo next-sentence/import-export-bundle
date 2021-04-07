@@ -51,11 +51,11 @@ class ExportDataController
         $this->resources = $resources;
     }
 
-    public function exportAction(Request $request, string $resource, string $format): Response
+    public function exportAction(Request $request, string $resource, string $format, ?string $outputFilename = null): Response
     {
-        $outputFilename = sprintf('%s-%s.%s', $resource, date('Y-m-d'), $format); // @todo Create a service for this
+        $fileName = sprintf('%s-%s.%s', $outputFilename ? $outputFilename : $resource, date('Y-m-d'), $format);
 
-        return $this->exportData($request, $resource, $format, $outputFilename);
+        return $this->exportData($request, $resource, $format, $fileName);
     }
 
     private function exportData(Request $request, string $exporter, string $format, string $outputFilename): Response
