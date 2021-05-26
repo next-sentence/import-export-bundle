@@ -12,10 +12,10 @@ final class Configuration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfigTreeBuilder(): TreeBuilder
+    public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('fos_sylius_import_export');
+        $treeBuilder = new TreeBuilder('lwc_import_export');
+        $rootNode = $treeBuilder->getRootNode();
 
         $rootNode
             ->children()
