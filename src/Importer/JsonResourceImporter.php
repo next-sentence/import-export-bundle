@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LWC\ImportExportBundle\Importer;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use LWC\ImportExportBundle\Exception\ImporterException;
 use LWC\ImportExportBundle\Processor\ResourceProcessorInterface;
 
