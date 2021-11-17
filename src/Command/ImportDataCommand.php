@@ -46,14 +46,14 @@ final class ImportDataCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /** @var string $importer */
         $importer = $input->getArgument('importer');
         if (empty($importer)) {
             $this->listImporters($input, $output);
 
-            return;
+            return 0;
         }
 
         $file = $input->getArgument('file');
@@ -71,14 +71,14 @@ final class ImportDataCommand extends Command
             } catch (\Throwable $exception) {
                 $output->writeln("<error>Format can't be detected.</error>");
 
-                return;
+                return 1;
             } finally {
                 $output->writeln('You can set it manually by using --format parameter');
             }
         }
 
         if (!\is_string($format)) {
-            return;
+            return 1;
         }
 
         $name = ImporterRegistry::buildServiceName($importer, $format);
@@ -120,6 +120,8 @@ final class ImportDataCommand extends Command
                 sprintf('Failed %s: %s', $countOrRows, $failed),
             ]
         );
+
+        return 0;
     }
 
     private function listImporters(InputInterface $input, OutputInterface $output, ?string $errorMessage = null): void

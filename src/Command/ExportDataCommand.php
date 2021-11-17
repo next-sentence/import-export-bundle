@@ -51,7 +51,7 @@ final class ExportDataCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /** @var string $exporter */
         $exporter = $input->getArgument('exporter');
@@ -59,7 +59,7 @@ final class ExportDataCommand extends Command
         if (empty($exporter)) {
             $this->listExporters($input, $output);
 
-            return;
+            return 0;
         }
 
         $format = $input->getOption('format');
@@ -97,6 +97,8 @@ final class ExportDataCommand extends Command
             $file,
             $name
         ));
+
+        return 0;
     }
 
     private function listExporters(InputInterface $input, OutputInterface $output, ?string $errorMessage = null): void
