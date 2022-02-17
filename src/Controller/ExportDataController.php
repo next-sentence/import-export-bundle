@@ -51,17 +51,28 @@ class ExportDataController
         $this->resources = $resources;
     }
 
-    public function exportAction(Request $request, string $resource, string $format, ?string $outputFilename = null): Response
-    {
+    public function exportAction(
+        Request $request,
+        string $resource,
+        string $format,
+        ?string $outputFilename = null,
+        ?string $exporter = null
+    ): Response {
         $fileName = sprintf('%s-%s.%s', $outputFilename ? $outputFilename : $resource, date('Y-m-d'), $format);
 
-        return $this->exportData($request, $resource, $format, $fileName);
+        $exporter = $exporter ?? $resource;
+
+        return $this->exportData($request, $exporter, $resource, $format, $fileName);
     }
 
-    private function exportData(Request $request, string $exporter, string $format, string $outputFilename): Response
-    {
-        $metadata = Metadata::fromAliasAndConfiguration($exporter,
-            $this->resources[$exporter]);
+    private function exportData(
+        Request $request,
+        string $exporter,
+        string $resource,
+        string $format,
+        string $outputFilename
+    ): Response {
+        $metadata = Metadata::fromAliasAndConfiguration($exporter, $this->resources[$resource]);
         $configuration = $this->requestConfigurationFactory->create($metadata, $request);
 
         $name = ExporterRegistry::buildServiceName($exporter, $format);
