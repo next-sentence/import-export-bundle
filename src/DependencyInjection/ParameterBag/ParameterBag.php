@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace LWC\ImportExportBundle\DependencyInjection\ParameterBag;
 
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
 use Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -26,15 +27,19 @@ final class ParameterBag extends FrozenParameterBag implements ParameterBagInter
     /**
      * {@inheritdoc}
      */
-    public function all()
+    public function all(): array
     {
         return $this->container->getParameterBag()->all();
     }
 
     /**
-     * {@inheritdoc}
+     * Gets a parameter.
+     *
+     * @return array|bool|string|int|float|\UnitEnum|null
+     *
+     * @throws ParameterNotFoundException if the parameter is not defined
      */
-    public function get($name)
+    public function getParameter(string $name)
     {
         return $this->container->getParameter($name);
     }
@@ -42,7 +47,7 @@ final class ParameterBag extends FrozenParameterBag implements ParameterBagInter
     /**
      * {@inheritdoc}
      */
-    public function has($name)
+    public function has($name): bool
     {
         return $this->container->hasParameter($name);
     }
