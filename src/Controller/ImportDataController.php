@@ -20,9 +20,6 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 final class ImportDataController
 {
-    /** @var FlashBagInterface */
-    private $flashBag;
-
     /** @var ServiceRegistryInterface */
     private $registry;
 
@@ -34,14 +31,12 @@ final class ImportDataController
 
     public function __construct(
         ServiceRegistryInterface $registry,
-        FlashBagInterface $flashBag,
         FormFactoryInterface $formFactory,
         \Twig_Environment $twig
     ) {
         $this->registry = $registry;
         $this->formFactory = $formFactory;
         $this->twig = $twig;
-        $this->flashBag = $flashBag;
     }
 
     public function importFormAction(Request $request): Response
@@ -59,15 +54,17 @@ final class ImportDataController
 
     public function importAction(Request $request): RedirectResponse
     {
+        $session = $request->getSession();
+        $flashBag = $session->getFlashBag();
         $importer = $request->attributes->get('resource');
         $form = $this->getForm($importer);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->importData($importer, $form);
+                $this->importData($importer, $form, $flashBag);
             } catch (\Throwable $exception) {
-                $this->flashBag->add('error', $exception->getMessage());
+                $flashBag->add('error', $exception->getMessage());
             }
         }
         $referer = $request->headers->get('referer');
@@ -80,7 +77,7 @@ final class ImportDataController
         return $this->formFactory->create(ImportType::class, null, ['importer_type' => $importerType]);
     }
 
-    private function importData(string $importer, FormInterface $form): void
+    private function importData(string $importer, FormInterface $form, FlashBagInterface $flashBag): void
     {
         $format = $form->get('format')->getData();
         $name = ImporterRegistry::buildServiceName($importer, $format);
@@ -117,7 +114,7 @@ final class ImportDataController
             count($result->getFailedRows())
         );
 
-        $this->flashBag->add('success', $message);
+        $flashBag->add('success', $message);
 
         if ($result->getMessage() !== null) {
             throw new ImporterException($result->getMessage());
