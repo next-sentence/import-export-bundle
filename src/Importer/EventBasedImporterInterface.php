@@ -6,7 +6,7 @@ namespace LWC\ImportExportBundle\Importer;
 
 interface EventBasedImporterInterface extends ImporterInterface
 {
-    public function onPreImport(?\File $file = null): void;
+    public function onPreImport(?\SplFileInfo $file = null): void;
 
-    public function onPostImport(?\File $file = null): void;
+    public function onPostImport(?\SplFileInfo $file = null): void;
 }

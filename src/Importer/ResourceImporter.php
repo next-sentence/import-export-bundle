@@ -109,12 +109,12 @@ class ResourceImporter implements EventBasedImporterInterface
         return false;
     }
 
-    public function onPreImport(?\File $file = null): void
+    public function onPreImport(?\SplFileInfo $file = null): void
     {
         // TODO: Implement onPreImport() method.
     }
 
-    public function onPostImport(?\File $file = null): void
+    public function onPostImport(?\SplFileInfo $file = null): void
     {
         // TODO: Implement onPostImport() method.
     }
