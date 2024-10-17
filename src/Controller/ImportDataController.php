@@ -6,6 +6,7 @@ namespace LWC\ImportExportBundle\Controller;
 
 use LWC\ImportExportBundle\Exception\ImporterException;
 use LWC\ImportExportBundle\Form\ImportType;
+use LWC\ImportExportBundle\Importer\EventBasedImporterInterface;
 use LWC\ImportExportBundle\Importer\ImporterInterface;
 use LWC\ImportExportBundle\Importer\ImporterRegistry;
 use LWC\ImportExportBundle\Importer\ImporterResult;
@@ -102,9 +103,16 @@ final class ImportDataController
             throw new ImporterException(sprintf('File %s could not be loaded', $file->getClientOriginalName()));
         }
 
+        if ($service instanceof EventBasedImporterInterface) {
+            $service->onPreImport($file);
+        }
+
         /** @var ImporterResult $result */
         $result = $service->import($path);
 
+        if ($service instanceof EventBasedImporterInterface) {
+            $service->onPostImport($file);
+        }
         $message = sprintf(
             'Imported via %s importer (Time taken in ms: %s, Imported %s, Skipped %s, Failed %s)',
             $name,

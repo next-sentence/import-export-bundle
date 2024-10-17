@@ -10,7 +10,7 @@ use LWC\ImportExportBundle\Exception\ItemIncompleteException;
 use LWC\ImportExportBundle\Processor\ResourceProcessorInterface;
 use Port\Reader\ReaderFactory;
 
-class ResourceImporter implements ImporterInterface
+class ResourceImporter implements EventBasedImporterInterface
 {
     /** @var ReaderFactory */
     private $readerFactory;
@@ -107,5 +107,15 @@ class ResourceImporter implements ImporterInterface
         }
 
         return false;
+    }
+
+    public function onPreImport(?\File $file = null): void
+    {
+        // TODO: Implement onPreImport() method.
+    }
+
+    public function onPostImport(?\File $file = null): void
+    {
+        // TODO: Implement onPostImport() method.
     }
 }
